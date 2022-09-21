@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {%if current_user.is_authenticated%}
+    <p id="logedinuser">Logged-In as: <i>{{current_user.email}}</i></p>
+    {% endif %}
+
+<h2 style="text-align: center; margin-top: 2rem;">Available Inventory</h2>
+
+<!-- {{ posts }} -->
+
+<div class="d-flex flex-wrap">
+{% for post in posts %}
+<!-- <div class="card-group">  -->
+    <div class="card">
+
+        <img class="card-img-top" src="{{ post.img_url }}">
+            
+        <div class="card-body">
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="card-text">{{ post.description }}</p>
+        </div>
+
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><b>Dimensions:</b> {{ post.dimensions }}</li>
+            <li class="list-group-item"><b>Weight:</b> {{ post.weight }}</li>
+            <li class="list-group-item"><b>Price:</b> ${{ post.price }}</li>
+        </ul>
+
+        <div class="card-body card-links">
+            {% if current_user.is_authenticated and current_user.token == post.user_token%}
+            <a href="{{ url_for('auth.update_post', id=post.id)}}" class="card-link" id="update">Update</a>
+            <a href="{{ url_for('auth.delete_post', id=post.id)}}" class="card-link" id="delete">Delete</a>
+            {% else %}
+            <a href="{{ post.model_url }}" class="card-link" id="download">Download</a>
+            <a href="{{ url_for('site.purchase') }}" class="card-link" id="buy">Buy</a> 
+            {% endif %}
+        </div>
+
+    </div>
+<!-- </div> -->
+    {% endfor %}
+</div>
+
+
+
+
+{% endblock content %}
+
+    <!-- https://via.placeholder.com/100x75 -->

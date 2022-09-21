@@ -1,0 +1,8 @@
+Flask-WTF==1.0.0
+WTForms==3.0.1
+SQLAlchemy==1.4.31
+Flask-Migrate==3.1.0
+python-dotenv==0.19.2
+psycopg2==2.9.3
+Jinja2==3.0.3
+email-validator==1.1.3

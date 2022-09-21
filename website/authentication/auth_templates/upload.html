@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- TODO: add JinJa flash messages here for successfull upload -->
+
+<main class="container auth_form col-md-6 mt-4">
+    <div>
+        <h2>Upload Form </h2>
+        <hr>
+        {% include 'form_upload.html' %}
+        <aside class="col-12 col-md-6"></aside>
+        <aside class="col-12 col-md-6" id="signup-aside"></aside>
+    </div>
+</main>
+
+{% endblock content %}

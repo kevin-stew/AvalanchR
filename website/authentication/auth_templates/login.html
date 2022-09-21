@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Flashed message to user -->
+<!-- <div class="container"> -->
+    {% with messages = get_flashed_messages(with_categories = True) %}
+        {% if messages %}
+            {% for cat,msg in messages %}
+                {% if cat == 'user-created' %}
+                    <div class="alert alert-success">
+                        {{ msg }}
+                        <button type='button' class="close" data-dismiss = 'alret'>&times;</button>
+                    </div>
+                {% endif %}
+                {% if cat == 'auth-failed' %}
+                <div class="alert alert-danger">
+                    {{ msg }}
+                    <button type='button' class="close" data-dismiss = 'alret'>&times;</button>
+                </div>
+                {% endif %}    
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+<!-- </div> -->
+
+    <!-- <h1>Login In Here</h1> -->
+
+    <main class="container auth_form col-md-6 mt-4">
+        <!-- <div class="row"> -->
+            <!-- <aside class="col-12 col-md-6"> -->
+            <div>
+                <h2>Log In To Your Account</h2>
+                <hr>
+                {% include 'form_login.html' %}
+            </div>
+            <!-- </aside> -->
+        <!-- </div> -->
+    </main>
+
+{% endblock content %}

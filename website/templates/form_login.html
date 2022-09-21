@@ -1,0 +1,22 @@
+<!--HTML Produced By The Flask Form-->
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+
+        <fieldset id="email-field" class="pb-3">
+            {{  form.email.label }}
+            {{  form.email(class = 'form-control', placeholder = 'user@website.com') }}
+        </fieldset>
+        
+        <fieldset id="password-field" class="pb-3">
+            {{  form.password.label }}
+            {{  form.password(class = 'form-control', placeholder = 'user password...') }}
+        </fieldset>
+
+        
+        <!-- Submit Button -->
+        {{ form.submit_button(class = 'btn btn-dark btn-block')  }}
+
+    </div>
+
+</form>
