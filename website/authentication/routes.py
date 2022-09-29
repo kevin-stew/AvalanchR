@@ -1,14 +1,15 @@
 from flask import Blueprint, flash, render_template, request, redirect, url_for, send_from_directory
 from flask_login import login_user, logout_user, current_user, login_required
+import boto3, botocore
 
 # project file imports
 from website.forms import UserLoginForm, ObjectUploadForm, UserSignupForm
 from website.models import User, Post, db, check_password_hash, post_schema, posts_schema
+from config import Config
 
 #from file upload tutorial for images and files
-import os
+import os, ntpath
 from werkzeug.utils import secure_filename
-from config import Config
 
 auth = Blueprint('auth', __name__, template_folder ='auth_templates')
 
@@ -78,27 +79,27 @@ def login():
 @login_required
 def upload():
     form = ObjectUploadForm()
-    try:
-        if request.method == 'POST':
-            title = form.title.data
-            description = form.description.data
-            price = form.price.data
-            dimensions = form.dimensions.data
-            weight = form.weight.data
-            img_url = upload_image()
-            model_url = upload_model()
-            user_token = current_user.token
-            print(title, description, price, dimensions, weight, img_url, model_url)
+    # try:
+    if request.method == 'POST':
+        title = form.title.data
+        description = form.description.data
+        price = form.price.data
+        dimensions = form.dimensions.data
+        weight = form.weight.data
+        img_url = upload_image()
+        model_url = upload_model()
+        user_id = current_user.id
+        print(title, description, price, dimensions, weight, img_url, model_url)
 
-            post = Post(title, description, price, dimensions, weight, img_url, model_url, user_token)
+        post = Post(title, description, price, dimensions, weight, img_url, model_url, user_id)
 
-            db.session.add(post)
-            db.session.commit()
+        db.session.add(post)
+        db.session.commit()
 
-            flash('Model Successfully Uploaded!', 'mode-made')
-            return redirect(url_for('site.inventory'))
-    except:
-        raise Exception('Something went wrong')
+        flash('Model Successfully Uploaded!', 'mode-made')
+        return redirect(url_for('site.inventory'))
+    # except:
+    #     raise Exception('Something went wrong')
 
     return render_template('upload.html', form=form)
 
@@ -108,32 +109,72 @@ def upload():
 #     return '.' in filename and \
         #    filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'obj', 'stl'} #Config.ALLOWED_EXTENSIONS
 
-#@app.route("/upload", methods=['GET', 'POST'])
-def upload_image():
-    #if request.method == 'POST':
+# start aws session for img and model uploads
+client = boto3.client('s3', Config.AWS_REGION)
 
+def upload_image():
     #check to see if file exists
     if request.files:  
         file = request.files["image"]
+        # insert standard flask security
+    
+    # ----- aws s3 cloud file storage ----
+    # if object_name is None:
+    object_name = file.filename
 
+    print('*** test pint ->', file)
+    print('*** test pint ->', file.filename)
+    print('*** test pint ->', Config.UPLOAD_FOLDER + file.filename)
+
+    # file MUST get saved for werkzeug to function!
+    file.save(os.path.join(Config.UPLOAD_FOLDER, file.filename))
+    # file.save(file.filename)
+
+    # upload to aws3, must include: name, bucket, and object name (min)
+    client.upload_file(Config.UPLOAD_FOLDER + file.filename, 
+                        Config.AWS_BUCKET_NAME, 
+                        object_name,
+                        ExtraArgs={'ACL': 'public-read',
+                                    'ContentType':'image/jpeg'})
+
+    return file.filename
+
+    # ----- local project storage -----
     # print(Config.UPLOAD_FOLDER)
     # print(file)
-    #check for allowed file type, and upload the file
-    #if file and allowed_file(file.filename):
-    #filename = secure_filename(file.filename)
-    file.save(os.path.join(Config.UPLOAD_FOLDER, file.filename))
-    return '../../static/uploads/' + file.filename  #directory file path (static) + file name
+    # file.save(os.path.join(Config.UPLOAD_FOLDER, file.filename))
+    # return '../../static/uploads/' + file.filename  #directory file path (static) + file name
+    
 
 #-----------------------UPLOAD_MODEL-------------------------
 def upload_model():
     if request.files:  
         file = request.files["model"]
-
+        # insert standard flask security
+    
+    # ----- aws s3 cloud file storage ----
+    # if object_name is None:
+    object_name = file.filename
+    
+    # file MUST get saved for werkzeug to function!
     file.save(os.path.join(Config.UPLOAD_FOLDER, file.filename))
-    print(file.filename)
-    return '../../static/uploads/' + file.filename 
-#-----------------------UPDATE_POST-------------------------
+    # file.save(file.filename)
 
+    # upload to aws3, must include: name, bucket, and object name (min)
+    client.upload_file(Config.UPLOAD_FOLDER + file.filename, 
+                        Config.AWS_BUCKET_NAME, 
+                        # Config.BUCKETEER_BUCKET_NAME, 
+                        object_name,
+                        ExtraArgs={'ACL': 'public-read-write'})
+
+    return file.filename
+
+
+    # ----- local project storage -----
+    # file.save(os.path.join(Config.UPLOAD_FOLDER, file.filename))
+    # return '../../static/uploads/' + file.filename 
+
+#-----------------------UPDATE_POST-------------------------
 # def update_image():
 #     if request.files:  
 #         file = request.files["image"]
@@ -160,7 +201,7 @@ def update_post(id):
         # post_update.img_url = request.form[update_image()]
         # post_update.title = request.form[update_model()]
         post_update.id = id
-        post_update.user_token = post_update.user_token
+        post_update.user_id = post_update.user_id
         try:
             db.session.commit()
             post_schema.dump(post_update)
@@ -175,9 +216,13 @@ def update_post(id):
 
 #--------------------------DOWNLOAD----------------------
 @auth.route('/', methods = ['GET', 'POST'])  #url path doesn't seem to affect anything, investigate this
-#/static/uploads/
+
 # @login_required
 def download():
+    #----------aws download code-----------
+    #...
+
+    #----------local download code----------
     # try:
     return send_from_directory(Post.model_url)
         # os.path.join(Config.UPLOAD_FOLDER, file.filename), filename=model_url, as_attachment=True )
@@ -193,6 +238,13 @@ def delete_post(id):
     #id passed in from JinJa
     post = Post.query.get(id)  #gets the db row via id
     # post = Post.query.get_or_404(id)  #tutorial code, this works too
+    
+    # remove objects from aws FIRST!
+    print('*** - ', post.img_url)
+    print('*** - ', post.model_url)
+    client.delete_object(Bucket=Config.AWS_BUCKET_NAME, Key=post.img_url)
+    client.delete_object(Bucket=Config.AWS_BUCKET_NAME, Key=post.model_url)
+
     db.session.delete(post)
     db.session.commit()
     post_schema.dump(post)

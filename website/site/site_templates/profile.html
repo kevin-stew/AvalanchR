@@ -8,11 +8,11 @@
     <br>
 </header>
 
-<div class="container">
+<!-- <div class="container">
     <h4>Your profile details</h4>
     <li class="list-group-item"><b>Email / User Account:</b> {{ current_user.email }}</li>
-    <li class="list-group-item"><b>API Token:</b> {{ current_user.token }}</li>
-</div>
+</div> -->
+
 <br>
 
     <h4 style="text-align: center;" class="md-3">Items you currently have posted for sale:</h4>
@@ -21,7 +21,7 @@
         {% for post in user_posts %}
         <div class="card">
 
-            <img class="card-img-top" src="{{ post.img_url }}">
+            <img class="card-img-top" src="{{ Config.AWS_PUBLIC_URL + '/' + post.img_url }}">
                 
             <div class="card-body">
                 <h5 class="card-title">{{ post.title }}</h5>

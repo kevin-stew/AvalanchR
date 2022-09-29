@@ -15,7 +15,7 @@
 <!-- <div class="card-group">  -->
     <div class="card">
 
-        <img class="card-img-top" src="{{ post.img_url }}">
+        <img class="card-img-top" src="{{ Config.AWS_PUBLIC_URL + '/' + post.img_url }}">
             
         <div class="card-body">
             <h5 class="card-title">{{ post.title }}</h5>
@@ -29,11 +29,11 @@
         </ul>
 
         <div class="card-body card-links">
-            {% if current_user.is_authenticated and current_user.token == post.user_token%}
+            {% if current_user.is_authenticated and current_user.id == post.user_id%}
             <a href="{{ url_for('auth.update_post', id=post.id)}}" class="card-link" id="update">Update</a>
             <a href="{{ url_for('auth.delete_post', id=post.id)}}" class="card-link" id="delete">Delete</a>
             {% else %}
-            <a href="{{ post.model_url }}" class="card-link" id="download">Download</a>
+            <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" class="card-link" id="download">Download</a>
             <a href="{{ url_for('site.purchase') }}" class="card-link" id="buy">Buy</a> 
             {% endif %}
         </div>
@@ -42,8 +42,6 @@
 <!-- </div> -->
     {% endfor %}
 </div>
-
-
 
 
 {% endblock content %}

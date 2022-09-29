@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField
 from wtforms.validators import DataRequired, Email, InputRequired, EqualTo
 
 class UserLoginForm(FlaskForm):
@@ -17,10 +17,12 @@ class UserSignupForm(FlaskForm):
 
 class ObjectUploadForm(FlaskForm):
     title = StringField('Title', validators = [DataRequired()])
-    description = TextAreaField('Description', validators = [DataRequired()])
+    description = TextAreaField('Description')
     price = StringField('Price', validators = [DataRequired()])
-    dimensions = StringField('Dimensions', validators = [DataRequired()])
-    weight = StringField('Weight', validators = [DataRequired()])
-    img_url = StringField('Preview image', validators = [DataRequired()])  #reseach what this line needs to be to accept files
-    model_url = StringField('3D model file', validators = [DataRequired()])
+    dimensions = StringField('Dimensions')
+    weight = StringField('Weight')
+    img_url = FileField('Preview image', validators = [DataRequired()])  
+    model_url = FileField('3D model file', validators = [DataRequired()])
+    # img_url = StringField('Preview image', validators = [DataRequired()])  
+    # model_url = StringField('3D model file', validators = [DataRequired()])
     submit_button = SubmitField()
