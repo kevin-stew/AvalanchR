@@ -1,6 +1,6 @@
-from flask import Blueprint, flash, render_template, request, redirect, url_for, send_from_directory
+from flask import Blueprint, flash, render_template, request, redirect, url_for, send_from_directory, abort
 from flask_login import login_user, logout_user, current_user, login_required
-import boto3, botocore
+import boto3, os
 
 # project file imports
 from website.forms import UserLoginForm, ObjectUploadForm, UserSignupForm
@@ -74,40 +74,82 @@ def login():
 
     return render_template('login.html', form=form)
 
+#-----------EXCEED UPLOAD SIZE MAX-----------------
+# @auth.errorhandler(400)
+# def image_too_large(error):
+#     error=['Image file is too large', 'Oops']
+#     return render_template('413.html'), 413
+
 #----------------------UPLOAD_FORM--------------------------
 @auth.route('/upload', methods = ['GET', 'POST'])
 @login_required
 def upload():
     form = ObjectUploadForm()
     # try:
+
     if request.method == 'POST':
+
+        #check image existance / extension before processing db update:
+        if not request.files["image"]:
+            flash('⚠ Please attach a preview image file')
+            return render_template('upload.html', form=form)
+        else:
+            uploadimage = request.files["image"].filename
+            image_ext = os.path.splitext(uploadimage)[1].lower()
+            if image_ext not in Config.ALLOWED_IMAGES:
+                flash('⚠ Image extension not allowed')
+                return render_template('upload.html', form=form)
+
+        #check model existance / extension before processing db update:
+        if not request.files["model"]:
+            flash('⚠ Please attach a 3D model file')
+            return render_template('upload.html', form=form)
+        else:
+            uploadmodel = request.files["model"].filename
+            model_ext = os.path.splitext(uploadmodel)[1].lower()
+            if model_ext not in Config.ALLOWED_MODELS:
+                flash('⚠ Model extension not allowed')
+                return render_template('upload.html', form=form)
+
+        # --------- size tests -------------
+        image_test = request.files["image"]
+        
+        print('--', image_test.content_length)
+        print('**', image_test.tell())
+        print('****', image_test.seek(0, os.SEEK_SET))
+        
+        # --------- size tests -------------
+        
+        # load db variables here
         title = form.title.data
         description = form.description.data
         price = form.price.data
         dimensions = form.dimensions.data
         weight = form.weight.data
         img_url = upload_image()
-        model_url = upload_model()
+        model_url = upload_model() 
         user_id = current_user.id
+
         print(title, description, price, dimensions, weight, img_url, model_url)
 
         post = Post(title, description, price, dimensions, weight, img_url, model_url, user_id)
 
         db.session.add(post)
-        db.session.commit()
+        db.session.commit()    
+         
+            
+        return redirect(url_for('site.profile'))
 
-        flash('Model Successfully Uploaded!', 'mode-made')
-        return redirect(url_for('site.inventory'))
+        # return redirect(url_for('auth.upload'))
     # except:
-    #     raise Exception('Something went wrong')
+    #     flash('Please check that your file extensions are allowed.')
+    # #     raise Exception('Something went wrong')
 
     return render_template('upload.html', form=form)
 
 
 #-----------------------UPLOAD_IMAGE-------------------------
-# def allowed_file(filename):
-#     return '.' in filename and \
-        #    filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'obj', 'stl'} #Config.ALLOWED_EXTENSIONS
+
 
 # start aws session for img and model uploads
 client = boto3.client('s3', 
@@ -116,31 +158,39 @@ client = boto3.client('s3',
                         region_name=Config.AWS_REGION)
 
 def upload_image():
-    #check to see if file exists
-    if request.files:  
-        file = request.files["image"]
-        # insert standard flask security
+ 
+    # get werkzeugfile from request dict
+    file = request.files["image"]
     
-    # ----- aws s3 cloud file storage ----
-    # if object_name is None:
-    object_name = file.filename
+    # standard flask security
+    image_name = secure_filename(file.filename)
+    
+    # set image name to what the user is calling it
+    object_name = image_name
 
-    print('*** test pint ->', file)
-    print('*** test pint ->', file.filename)
-    print('*** test pint ->', Config.UPLOAD_FOLDER + file.filename)
+    # test prints
+    # print('*** test pint ->', file)
+    # print('*** test pint ->', file.filename)
+    # print('*** test pint ->', Config.UPLOAD_FOLDER + file.filename)
 
-    # file MUST get saved for werkzeug to function!
-    file.save(os.path.join(Config.UPLOAD_FOLDER, file.filename))
-    # file.save(file.filename)
+    # file MUST get saved for werkzeug to function! (otherwise is discarded immediately)
+    file.save(os.path.join(Config.UPLOAD_FOLDER, image_name))
+
+
+    # -------- max image size test ---------
+    image_size = os.stat(Config.UPLOAD_FOLDER + image_name).st_size
+    if image_size > 1024000:
+        abort(400, '⚠ Image file is too large - it needs to be smaller than 1MB')
+    # -------- max image size test ---------
 
     # upload to aws3, must include: name, bucket, and object name (min)
-    client.upload_file(Config.UPLOAD_FOLDER + file.filename, 
+    client.upload_file(Config.UPLOAD_FOLDER + image_name, 
                         Config.AWS_BUCKET_NAME, 
                         object_name,
                         ExtraArgs={'ACL': 'public-read',
                                     'ContentType':'image/jpeg'})
 
-    return file.filename
+    return image_name
 
     # ----- local project storage -----
     # print(Config.UPLOAD_FOLDER)
@@ -151,26 +201,32 @@ def upload_image():
 
 #-----------------------UPLOAD_MODEL-------------------------
 def upload_model():
-    if request.files:  
-        file = request.files["model"]
-        # insert standard flask security
-    
-    # ----- aws s3 cloud file storage ----
-    # if object_name is None:
-    object_name = file.filename
+
+    # get werkzeugfile from request dict
+    file = request.files["model"]
+
+    # standard flask security
+    model_name = secure_filename(file.filename)
+
+    # set object name to what the user is calling it
+    object_name = model_name
     
     # file MUST get saved for werkzeug to function!
-    file.save(os.path.join(Config.UPLOAD_FOLDER, file.filename))
-    # file.save(file.filename)
+    file.save(os.path.join(Config.UPLOAD_FOLDER, model_name))
+
+    # -------- max model size test ---------
+    model_size = os.stat(Config.UPLOAD_FOLDER + model_name).st_size
+    if model_size > 5120000:
+        abort(400, '⚠ Model file is too large - it needs to be smaller than 1MB')
+    # -------- max model size test ---------
 
     # upload to aws3, must include: name, bucket, and object name (min)
-    client.upload_file(Config.UPLOAD_FOLDER + file.filename, 
+    client.upload_file(Config.UPLOAD_FOLDER + model_name, 
                         Config.AWS_BUCKET_NAME, 
                         # Config.BUCKETEER_BUCKET_NAME, 
                         object_name,
                         ExtraArgs={'ACL': 'public-read-write'})
-
-    return file.filename
+    return model_name
 
     # ----- local project storage -----
     # file.save(os.path.join(Config.UPLOAD_FOLDER, file.filename))

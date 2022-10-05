@@ -29,12 +29,19 @@
             {{  form.price(class = 'form-control', placeholder = '$$') }}
         </fieldset>
         
-        <label>Select a preview image file (.png or .jpg)</label>
+        <label><b>Preview Image</b>
+            <br>
+                <i>Allowed extensions: .png .jpg</i>
+        </label>
         <div class="custom-file pb-3" >
-            <input type="file" class="custom-file-input" name="image" id="image">
+            <input type="file" name="image" id="image">
         </div>
 
-        <label>3D model file (.obj or .stl)</label>
+        <label><b>3D Model</b> 
+            <br>
+            <i>Allowed extensions: .obj .stl .skp .glb .gitf</i>
+        </label>
+        
         <div class="custom-file pb-3" >
             <input type="file" class="custom-file-input" name="model" id="model">
         </div>

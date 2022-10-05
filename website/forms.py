@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import DataRequired, Email, InputRequired, EqualTo
 
 class UserLoginForm(FlaskForm):
@@ -21,8 +22,6 @@ class ObjectUploadForm(FlaskForm):
     price = StringField('Price', validators = [DataRequired()])
     dimensions = StringField('Dimensions')
     weight = StringField('Weight')
-    img_url = FileField('Preview image', validators = [DataRequired()])  
-    model_url = FileField('3D model file', validators = [DataRequired()])
-    # img_url = StringField('Preview image', validators = [DataRequired()])  
-    # model_url = StringField('3D model file', validators = [DataRequired()])
+    img_url = FileField('Preview image', validators = [FileRequired()])  
+    model_url = FileField('3D model file', validators = [FileRequired()])
     submit_button = SubmitField()

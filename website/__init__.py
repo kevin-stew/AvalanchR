@@ -8,6 +8,9 @@ from .models import db as root_db, login_manager, ma
 
 app = Flask(__name__)
 
+# set TOTAL MAX for all files uploaded at onec (image +)
+app.config['MAX_CONTENT_LENGTH'] = 6 * 1024 * 1024
+
 app.config.from_object(Config)
 
 app.register_blueprint(site)

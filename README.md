@@ -1,5 +1,5 @@
-Future description of my project here
+AvalanchR is an e-commerce platorm to help the merchants of outdoor and salvaged construction materials sell their goods.  By allowing sellers to upload and freely share accurate 3D models of their hard-to-describe goods, architects and designers are able to integrate materials into their 3D project environments to evaluate appropriateness and any need for modification ahead of construction.  
 
-setup instructions 
+Currently buyers and sellers have the same general account type, this will be revised in the future to make seperate accounts for the buyer and seller side, which will behave differently.
 
-run instructions
+Database inforation is configured using SQL_alchemy (postgreSQL), and persistant file storage (for seller uploads) is accomplished via a aws s3 bucket.  Currently all file uploads are temporarily stored to the AvalanchR server before being sent to the bucket - this will be reconfigured in future releases to evaluate files at the upload form and then go directly to the bucket.
