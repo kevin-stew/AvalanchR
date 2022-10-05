@@ -2,7 +2,24 @@
 
 {% block content %}
 
-<!-- <h1>Sign Up Here</h1> -->
+<!-- <div class="container"> -->
+    {% with messages = get_flashed_messages(with_categories = True) %}
+        {% if messages %}
+            {% for cat,msg in messages %}
+                {% if cat == 'user-created' %}
+                    <div class="alert alert-success">
+                        {{ msg }}
+                    </div>
+                {% endif %}
+                {% if cat == 'auth-failed' %}
+                <div class="alert alert-danger">
+                    {{ msg }}
+                </div>
+                {% endif %}    
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+<!-- </div> -->
 
 <main class="container auth_form col-md-6 mt-4">
     <div>

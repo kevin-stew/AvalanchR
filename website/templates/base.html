@@ -39,6 +39,9 @@
             </div>
         </nav>
         <!--END NAV-->
+        {%if current_user.is_authenticated%}
+        <p> <b> {{current_user.email}} </b> </p>
+        {% endif %}
 
     {% block content %}
     {% endblock content %}

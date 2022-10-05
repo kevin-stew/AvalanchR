@@ -22,14 +22,16 @@ def signup():
         if request.method == 'POST' and form.validate_on_submit():
             email = form.email.data
             password = form.password.data
-            print(email,password)
+            print(email, password)
 
-            # Add User into Database
-            test = User.query.filter(User.email == email).first()
-            if email == test:
+
+            # check to see if email/user account already exists, reject if so
+            if User.query.filter_by(email=form.email.data).first():
                 print(email, 'already in db')
-                flash(f'{email} already has an account with us.','auth-failed')
-                return redirect(url_for('auth.login'))
+                flash(f'{email} already has an account with us. Please select a different email/user name.','auth-failed')
+                return redirect(url_for('auth.signup'))
+
+            # otherwise add the user acocunt info to db
             else:
                 user = User(email,password = password)
                 db.session.add(user)
@@ -63,7 +65,7 @@ def login():
             #----------Check if logged_user and password == password--------------
             if logged_user and check_password_hash(logged_user.password, password):
                 login_user(logged_user)
-                flash('You were successfully logged in', 'auth-success')
+                flash('You were successfully logged in, welcome back!', 'auth-success')
                 return redirect(url_for('site.profile'))
             else:
                 flash('Your Email/Password is incorrect.', 'auth-failed')
@@ -111,14 +113,6 @@ def upload():
                 flash('⚠ Model extension not allowed')
                 return render_template('upload.html', form=form)
 
-        # --------- size tests -------------
-        image_test = request.files["image"]
-        
-        print('--', image_test.content_length)
-        print('**', image_test.tell())
-        print('****', image_test.seek(0, os.SEEK_SET))
-        
-        # --------- size tests -------------
         
         # load db variables here
         title = form.title.data
@@ -168,14 +162,8 @@ def upload_image():
     # set image name to what the user is calling it
     object_name = image_name
 
-    # test prints
-    # print('*** test pint ->', file)
-    # print('*** test pint ->', file.filename)
-    # print('*** test pint ->', Config.UPLOAD_FOLDER + file.filename)
-
     # file MUST get saved for werkzeug to function! (otherwise is discarded immediately)
     file.save(os.path.join(Config.UPLOAD_FOLDER, image_name))
-
 
     # -------- max image size test ---------
     image_size = os.stat(Config.UPLOAD_FOLDER + image_name).st_size
@@ -260,15 +248,17 @@ def update_post(id):
         # post_update.title = request.form[update_model()]
         post_update.id = id
         post_update.user_id = post_update.user_id
+
         try:
             db.session.commit()
             post_schema.dump(post_update)
             flash("Update Successful!")
             render_template('update.html', form=form, post_update = post_update)
             return redirect(url_for('site.inventory'))
+
         except:
-            # flash("Update Error, try again!")
             return render_template('update.html', form=form, post_update = post_update)
+
     else:
         return render_template('update.html', form=form, post_update = post_update)
 
@@ -296,8 +286,6 @@ def delete_post(id):
     # post = Post.query.get_or_404(id)  #tutorial code, this works too
     
     # remove objects from aws FIRST!
-    print('*** - ', post.img_url)
-    print('*** - ', post.model_url)
     client.delete_object(Bucket=Config.AWS_BUCKET_NAME, Key=post.img_url)
     client.delete_object(Bucket=Config.AWS_BUCKET_NAME, Key=post.model_url)
 

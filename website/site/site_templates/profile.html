@@ -2,6 +2,28 @@
 
 {% block content %}
 
+<!-- Flashed message to user -->
+<!-- <div class="container"> -->
+    {% with messages = get_flashed_messages(with_categories = True) %}
+        {% if messages %}
+            {% for cat,msg in messages %}
+                {% if cat == 'user-created' %}
+                    <div class="alert alert-success">
+                        {{ msg }}
+                        <!-- <button type='button' class="close" data-dismiss = 'alret'>&times;</button> -->
+                    </div>
+                {% endif %}
+                {% if cat == 'auth-failed' %}
+                <div class="alert alert-danger">
+                    {{ msg }}
+                    <!-- <button type='button' class="close" data-dismiss = 'alret'>&times;</button> -->
+                </div>
+                {% endif %}    
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+<!-- </div> -->
+
 <header class="hero-section">  
     <br>  
     <h5>Welcome {{ current_user.email }}!</h5>
