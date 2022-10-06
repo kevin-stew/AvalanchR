@@ -37,7 +37,7 @@ a{
     margin-bottom: 3rem;
 }
 
-#logedinuser{
+.loggedinuser{
     font-size: x-small; 
 }
 
@@ -69,6 +69,17 @@ ul#horizontal-list li, ul#horizontal-list a{
     text-decoration:none;
     padding: 0.5vw;
     color: white;
+}
+/* below are actually used, above not sure */
+.navbar{
+    border-bottom: 1px grey solid;
+}
+.nav-link{
+    color: white;
+}
+.nav-link:hover{
+    transform: scale(1.01);
+    color: limegreen;
 }
 
 /* INDEX PAGE START */
@@ -139,7 +150,12 @@ header {
     justify-content: center;
 }
 
-/* AUTHENTICATION FORMS */
+/* FORMS */
+.home_box{
+    padding: 2%;
+    max-width: 600px;
+}
+
 .auth_form{
     border: 1px black solid;
     border-radius: 5px;
@@ -149,4 +165,13 @@ header {
     /* display: flex; */
     max-width: 600px;
     /* align-self: center; */
+    box-shadow: 5px 5px 5px;
+}
+
+.buy_form{
+    border: 2px black solid;
+    border-radius: 5px;
+    padding: 2%;
+    max-width: 1000px;
+    box-shadow: 5px 5px 5px;
 }

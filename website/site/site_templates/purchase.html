@@ -2,15 +2,35 @@
 
 {% block content %}
 
-<div id="construction" >
-<img src="../../static/images/construction.png">
-</div>
 
-<div class="container">
-    <header class="row">
-            <h3><b>Payment functionality is under construction...</b></h3>
-            <h5>Check back soon!</h5>
-    </header> 
-</div>
+    {% if current_user.is_authenticated %}
+
+        <div class="container buy_form col-md-6 mt-4 d-flex flex-column">
+                    <h1 class="text-center">🚧 🏗 🚧 </h1>
+                    <h3 class="text-center">In-store payment feature is comming soon! </h3>
+                    <hr>
+                    <h6>In the meantime, please contact the seller of this item directly at: </h6>
+                    
+                    <h6 class="text-center d-inline p-2 bg-light"><b>{{seller}}</b></h6>
+
+
+        </div>
+
+    {% else %}
+
+        <div class="container buy_form col-md-6 mt-4 d-flex flex-column">
+            <h2 class="text-center">You must have an account to make a purchase</h2>
+            <hr>
+            <h6 class="text-center"><i>Please login or sign up here:</i></h6>
+            <!-- <br> -->
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-outline-dark " onclick="document.location='/login'">Log In</button>
+                <button class="btn btn-outline-dark " onclick="document.location='/ignup'">Sign Up</button>
+            </div>
+            <br>
+        </div>    
+
+    {% endif %}
+
 
 {% endblock content %}

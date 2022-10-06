@@ -22,8 +22,8 @@
                 <span class="navbar-toggler-icon"></span>
                 </button>
             
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav">
+                <div class="collapse navbar-collapse justify-content-around" id="navbarNavAltMarkup">
+                    <!-- <div class="navbar-nav "> -->
                         <a class="nav-link active" href="{{ url_for('site.inventory') }}">Inventory</a>
                         <a class="nav-link active" href="{{ url_for('auth.upload') }}">Upload a Model</a>
                         {% if current_user.is_authenticated %}
@@ -33,14 +33,14 @@
                         <a class="nav-link active" href="{{ url_for('auth.login') }}">Log In</a>
                         <a class="nav-link active" href="{{ url_for('auth.signup') }}">Sign Up</a>
                         {% endif %}          
-                    </div>
+                    <!-- </div> -->
                 </div>
                 
             </div>
         </nav>
         <!--END NAV-->
         {%if current_user.is_authenticated%}
-        <p> <b> {{current_user.email}} </b> </p>
+        <p class="loggedinuser"> Logged in as: <b> {{current_user.email}} </b> </p>
         {% endif %}
 
     {% block content %}

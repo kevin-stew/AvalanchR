@@ -1,16 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    
-
 <h2 style="text-align: center; margin-top: 2rem;">Available Inventory</h2>
 
-<!-- {{ posts }} -->
 
 <div class="d-flex flex-wrap">
 {% for post in posts %}
-<!-- <div class="card-group">  -->
+
     <div class="card">
 
         <img class="card-img-top" src="{{ Config.AWS_PUBLIC_URL + '/' + post.img_url }}">
@@ -32,16 +28,14 @@
             <a href="{{ url_for('auth.delete_post', id=post.id)}}" class="card-link" id="delete">Delete</a>
             {% else %}
             <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" class="card-link" id="download">Download</a>
-            <a href="{{ url_for('site.purchase') }}" class="card-link" id="buy">Buy</a> 
+            <a href="{{ url_for('site.purchase', id=post.id) }}" class="card-link" id="buy">Buy</a> 
             {% endif %}
         </div>
 
     </div>
-<!-- </div> -->
-    {% endfor %}
+
+{% endfor %}
 </div>
 
-
 {% endblock content %}
-
-    <!-- https://via.placeholder.com/100x75 -->
+<!-- https://via.placeholder.com/100x75 -->

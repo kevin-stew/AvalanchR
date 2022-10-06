@@ -2,19 +2,13 @@
 
 {% block content %}
 
-<h1></h1>
 
-<div class="container">
-<!-- TODO: add JinJa flash messages here for successfull upload -->
-</div>
+<main class="container buy_form col-md-8 mt-4">
+    <h2>Post Update Form </h2>
+    <hr>
 
-<main class="container">
-    <div class="row">
-        <h2>Update Post Form </h2>
-        {% include 'form_update.html' %}
-        <aside class="col-12 col-md-6"></aside>
-        <aside class="col-12 col-md-6" id="signup-aside"></aside>
-    </div>
+    {% include 'form_update.html' %}
+
 </main>
 
 {% endblock content %}

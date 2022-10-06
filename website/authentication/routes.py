@@ -1,15 +1,12 @@
+import boto3, os
 from flask import Blueprint, flash, render_template, request, redirect, url_for, send_from_directory, abort
 from flask_login import login_user, logout_user, current_user, login_required
-import boto3, os
+from werkzeug.utils import secure_filename
 
 # project file imports
 from website.forms import UserLoginForm, ObjectUploadForm, UserSignupForm
 from website.models import User, Post, db, check_password_hash, post_schema, posts_schema
 from config import Config
-
-#from file upload tutorial for images and files
-import os, ntpath
-from werkzeug.utils import secure_filename
 
 auth = Blueprint('auth', __name__, template_folder ='auth_templates')
 
@@ -27,7 +24,7 @@ def signup():
 
             # check to see if email/user account already exists, reject if so
             if User.query.filter_by(email=form.email.data).first():
-                print(email, 'already in db')
+                print(email, 'account already in db')
                 flash(f'{email} already has an account with us. Please select a different email/user name.','auth-failed')
                 return redirect(url_for('auth.signup'))
 
@@ -253,24 +250,23 @@ def update_post(id):
             db.session.commit()
             post_schema.dump(post_update)
             flash("Update Successful!")
-            render_template('update.html', form=form, post_update = post_update)
+            render_template('update.html', form=form, post_update=post_update)
             return redirect(url_for('site.inventory'))
 
         except:
-            return render_template('update.html', form=form, post_update = post_update)
+            return render_template('update.html', form=form, post_update=post_update)
 
     else:
-        return render_template('update.html', form=form, post_update = post_update)
+        return render_template('update.html', form=form, post_update=post_update)
 
 #--------------------------DOWNLOAD----------------------
 @auth.route('/', methods = ['GET', 'POST'])  #url path doesn't seem to affect anything, investigate this
 
 # @login_required
-def download():
-
-    #----------local download code----------
+def download(id):
     # try:
-    return send_from_directory(Post.model_url)
+    post = Post.query.get(id)
+    return send_from_directory(post.model_url)
         # os.path.join(Config.UPLOAD_FOLDER, file.filename), filename=model_url, as_attachment=True )
 
     # except FileNotFoundError:
@@ -294,13 +290,6 @@ def delete_post(id):
     post_schema.dump(post)
 
     return redirect(url_for('site.inventory'))
-
-#-------------------------BUY-----------------------
-
-@auth.route('/inventory', methods = ['GET','POST'])  #de-bug this
-def seller_email():
-    flash(f'Purchase feature comming soon!!')
-    # return redirect(url_for('site.inventory'))
 
 #----------------------LOGOUT--------------------------
 

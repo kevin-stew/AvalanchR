@@ -16,7 +16,7 @@ def inventory():
     posts = Post.query.all()  #generates info for ALL posts in db
     posts.reverse() #reverses order of posts so most recent items show up first
 
-    return render_template('inventory.html', posts = posts, Config = Config)
+    return render_template('inventory.html', posts=posts, Config=Config)
 
 
 @site.route('/profile')
@@ -27,6 +27,11 @@ def profile():
     return render_template('profile.html', user_posts = user_posts, Config = Config)
 
 
-@site.route('/purchase')
-def purchase():
-    return render_template('purchase.html')
+@site.route('/purchase/<id>', methods = ['GET'])
+def purchase(id):
+    # seller = Post.query.get(id)
+    print(id)
+    # seller = Post.query.filter(id=id)
+    seller_id = Post.query.filter_by(id=id).first().user_id
+    seller= User.query.filter_by(id=seller_id).first().email
+    return render_template('purchase.html', seller=seller)
