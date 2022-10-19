@@ -4,7 +4,7 @@
 body, html{
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     height: 100%;
-    background-color: grey;
+    /* background-color: grey; */
 }
 
 a{
@@ -148,6 +148,13 @@ header {
 #construction{
     display: flex;
     justify-content: center;
+}
+
+/* INDIVIDUAL ITEM PAGE */
+
+model-viewer{
+    width: 500px;
+    height: 500px;
 }
 
 /* FORMS */

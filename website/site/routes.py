@@ -35,3 +35,12 @@ def purchase(id):
     seller_id = Post.query.filter_by(id=id).first().user_id
     seller= User.query.filter_by(id=seller_id).first().email
     return render_template('purchase.html', seller=seller)
+
+@site.route('/item/<id>', methods = ['GET'])
+def item(id):
+    post = Post.query.filter_by(id=id).first()
+    print('going to the unique items page now', id)
+    print(Config.AWS_PUBLIC_URL + '/' + post.model_url)
+
+
+    return render_template('item.html', Config=Config, post=post)

@@ -38,10 +38,10 @@
                 
             </div>
         </nav>
-        <!--END NAV-->
         {%if current_user.is_authenticated%}
         <p class="loggedinuser"> Logged in as: <b> {{current_user.email}} </b> </p>
         {% endif %}
+        <!--END NAV-->
 
     {% block content %}
     {% endblock content %}

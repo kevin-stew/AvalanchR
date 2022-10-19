@@ -23,6 +23,7 @@
         </ul>
 
         <div class="card-body card-links">
+            <a href="{{ url_for('site.item', id=post.id)}}" class="card-link">Item Page</a>
             {% if current_user.is_authenticated and current_user.id == post.user_id%}
             <a href="{{ url_for('auth.update_post', id=post.id)}}" class="card-link" id="update">Update</a>
             <a href="{{ url_for('auth.delete_post', id=post.id)}}" class="card-link" id="delete">Delete</a>

@@ -6,8 +6,17 @@
         
         <fieldset id="Object Title" class="pb-3">
             {{  form.title.label }}
-            {{  form.title(class = 'form-control', placeholder = 'What is this thing?') }}
+            {{  form.title(class = 'form-control', placeholder = 'What should we call this?') }}
         </fieldset>
+
+        <select class="form-select form-select-sm" aria-label=".form-select-sm">
+            <option selected>Category of thing</option>
+            <option value="1">🧱 Stone</option>
+            <option value="2">🌳 Plants</option>
+            <option value="3">🗿 Outdoor Decorative</option>
+            <option value="4">🏦 Interior Salvage</option>
+            <option value="5">❔ Other</option>
+          </select>
 
         <fieldset id="Description" class="pb-3">
             {{  form.description.label }}
@@ -45,7 +54,6 @@
         <div class="custom-file pb-3" >
             <input type="file" class="custom-file-input" name="model" id="model">
         </div>
-        
         
         {{ form.submit_button(class = 'btn btn-dark btn-block')  }}
         

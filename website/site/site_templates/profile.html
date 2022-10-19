@@ -59,6 +59,7 @@
             <div class="card-body card-links">
                 <!-- <a href="{{ post.model_url }}" class="card-link">Download</a> -->
                 <!-- <a href="#" class="card-link">Buy</a>  -->
+                <a href="{{ url_for('site.item', id=post.id)}}" class="card-link">Item Page</a>
                 <a href="{{ url_for('auth.update_post', id=post.id)}}" class="card-link" id="update">Update</a>
                 <a href="{{ url_for('auth.delete_post', id=post.id)}}" class="card-link" id="delete">Delete</a>
             

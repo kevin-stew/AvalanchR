@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from website.forms import UserLoginForm, ObjectUploadForm, UserSignupForm
 from website.models import User, Post, db, check_password_hash, post_schema, posts_schema
 from config import Config
+from helpers import upload_file_to_s3, delete_file_from_s3
 
 auth = Blueprint('auth', __name__, template_folder ='auth_templates')
 
@@ -142,40 +143,47 @@ def upload():
 #-----------------------UPLOAD_IMAGE-------------------------
 
 
-# start aws session for img and model uploads
-client = boto3.client('s3', 
-                        aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
-                        aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY,
-                        region_name=Config.AWS_REGION)
-
 def upload_image():
  
-    # get werkzeugfile from request dict
+    # after confirm 'user_file' exist, get the file from input
     file = request.files["image"]
     
     # standard flask security
     image_name = secure_filename(file.filename)
+    output = upload_file_to_s3(file) 
+        
+    # if upload success, will return file name of uploaded file
+    if output:
+        # write your code here to save the file name in database
+        return image_name
+
+    # upload failed, redirect to upload page
+    else:
+        flash("Unable to upload, try again")
+        return redirect(url_for('upload'))
     
+
+    # -------------------------
     # set image name to what the user is calling it
-    object_name = image_name
+    # object_name = image_name
 
     # file MUST get saved for werkzeug to function! (otherwise is discarded immediately)
-    file.save(os.path.join(Config.UPLOAD_FOLDER, image_name))
+    # file.save(os.path.join(Config.UPLOAD_FOLDER, image_name))
 
     # -------- max image size test ---------
-    image_size = os.stat(Config.UPLOAD_FOLDER + image_name).st_size
-    if image_size > 1024000:
-        abort(400, '⚠ Image file is too large - it needs to be smaller than 1MB')
+    # image_size = os.stat(Config.UPLOAD_FOLDER + image_name).st_size
+    # if image_size > 1024000:
+    #     abort(400, '⚠ Image file is too large - it needs to be smaller than 1MB')
     # -------- max image size test ---------
 
     # upload to aws3, must include: name, bucket, and object name (min)
-    client.upload_file(Config.UPLOAD_FOLDER + image_name, 
-                        Config.AWS_BUCKET_NAME, 
-                        object_name,
-                        ExtraArgs={'ACL': 'public-read',
-                                    'ContentType':'image/jpeg'})
+    # s3_client.upload_file(Config.UPLOAD_FOLDER + image_name, 
+    #                     Config.AWS_BUCKET_NAME, 
+    #                     object_name,
+    #                     ExtraArgs={'ACL': 'public-read',
+    #                                 'ContentType':'image/jpeg'})
 
-    return image_name
+    # return image_name
 
     # ----- local project storage -----
     # print(Config.UPLOAD_FOLDER)
@@ -192,26 +200,38 @@ def upload_model():
 
     # standard flask security
     model_name = secure_filename(file.filename)
+    output = upload_file_to_s3(file) 
+        
+    # if upload success, will return file name of uploaded file
+    if output:
+        # write your code here to save the file name in database
+        return model_name
 
+    # upload failed, redirect to upload page
+    else:
+        flash("Unable to upload, try again")
+        return redirect(url_for('upload'))
+
+    # -------------------------
     # set object name to what the user is calling it
-    object_name = model_name
+    # object_name = model_name
     
     # file MUST get saved for werkzeug to function!
-    file.save(os.path.join(Config.UPLOAD_FOLDER, model_name))
+    # file.save(os.path.join(Config.UPLOAD_FOLDER, model_name))
 
     # -------- max model size test ---------
-    model_size = os.stat(Config.UPLOAD_FOLDER + model_name).st_size
-    if model_size > 5120000:
-        abort(400, '⚠ Model file is too large - it needs to be smaller than 1MB')
+    # model_size = os.stat(Config.UPLOAD_FOLDER + model_name).st_size
+    # if model_size > 5120000:
+    #     abort(400, '⚠ Model file is too large - it needs to be smaller than 1MB')
     # -------- max model size test ---------
 
     # upload to aws3, must include: name, bucket, and object name (min)
-    client.upload_file(Config.UPLOAD_FOLDER + model_name, 
-                        Config.AWS_BUCKET_NAME, 
+    # s3_client.upload_file(Config.UPLOAD_FOLDER + model_name, 
+    #                     Config.AWS_BUCKET_NAME, 
                         # Config.BUCKETEER_BUCKET_NAME, 
-                        object_name,
-                        ExtraArgs={'ACL': 'public-read-write'})
-    return model_name
+                        # object_name,
+                        # ExtraArgs={'ACL': 'public-read-write'})
+    # return model_name
 
     # ----- local project storage -----
     # file.save(os.path.join(Config.UPLOAD_FOLDER, file.filename))
@@ -282,8 +302,7 @@ def delete_post(id):
     # post = Post.query.get_or_404(id)  #tutorial code, this works too
     
     # remove objects from aws FIRST!
-    client.delete_object(Bucket=Config.AWS_BUCKET_NAME, Key=post.img_url)
-    client.delete_object(Bucket=Config.AWS_BUCKET_NAME, Key=post.model_url)
+    delete_file_from_s3(post)
 
     db.session.delete(post)
     db.session.commit()
