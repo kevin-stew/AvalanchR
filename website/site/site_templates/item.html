@@ -2,29 +2,22 @@
 
 {% block content %}
 
+<div>
+    <model-viewer src="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" 
+                    shadow-intensity="1" 
+                    camera-controls 
+                    touch-action="pan-y"
+                    camera-orbit="45deg 55deg 100%"
+                    class="model_item_page"
+                    poster="{{ Config.AWS_PUBLIC_URL + '/' + post.img_url }}"
+                    >
+    </model-viewer>
+    {% if post.model_url[-3:] != 'glb' %}
+    <p>Sorry no 3D preview possible with this file</p>
+    {% endif %}
+</div>
+
+
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
-<!-- poster="{{ Config.AWS_PUBLIC_URL + '/' + post.img_url }}"  -->
-<!-- <model-viewer reveal="auto"
-                src="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" 
-                loading="auto"
-                ar ar-modes="webxr scene-viewer quick-look" 
-                camera-controls 
-                shadow-intensity="1">
-    <div class="progress-bar hide" slot="progress-bar">
-        <div class="update-bar"></div>
-    </div>
-</model-viewer> -->
-
-
-<!-- <model-viewer src="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}"></model-viewer> -->
-
-<model-viewer src="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" 
-                shadow-intensity="1" 
-                camera-controls 
-                touch-action="pan-y">
-</model-viewer>
-
-
 
 {% endblock content %}

@@ -9,8 +9,23 @@
 
     <div class="card">
 
+        <!-- preview image logic: if glb file show rotating model, otherwise uploaded image in s3-->
+        {% if post.model_url[-3:] == 'glb' %}
+        <div>
+        <model-viewer src="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" 
+                shadow-intensity="1" 
+                auto-rotate
+                camera-orbit="45deg 55deg 100%"
+                auto-rotate-delay="2500"
+                rotation-per-second=".3rad"
+                poster="{{ Config.AWS_PUBLIC_URL + '/' + post.img_url }}"
+                class="model_index_card"
+                >
+            </div>
+        {% else %}
         <img class="card-img-top" src="{{ Config.AWS_PUBLIC_URL + '/' + post.img_url }}">
-            
+        {% endif %}
+
         <div class="card-body">
             <h5 class="card-title">{{ post.title }}</h5>
             <p class="card-text">{{ post.description }}</p>
@@ -28,7 +43,7 @@
             <a href="{{ url_for('auth.update_post', id=post.id)}}" class="card-link" id="update">Update</a>
             <a href="{{ url_for('auth.delete_post', id=post.id)}}" class="card-link" id="delete">Delete</a>
             {% else %}
-            <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" class="card-link" id="download">Download</a>
+            <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" class="card-link" id="download">Download ({{post.model_url[-4:]}})</a>
             <a href="{{ url_for('site.purchase', id=post.id) }}" class="card-link" id="buy">Buy</a> 
             {% endif %}
         </div>
@@ -37,6 +52,8 @@
 
 {% endfor %}
 </div>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 {% endblock content %}
 <!-- https://via.placeholder.com/100x75 -->

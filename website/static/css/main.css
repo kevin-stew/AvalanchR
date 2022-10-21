@@ -152,9 +152,22 @@ header {
 
 /* INDIVIDUAL ITEM PAGE */
 
-model-viewer{
-    width: 500px;
-    height: 500px;
+model-viewer::part(default-progress-bar){
+    background-color: limegreen;
+    width:50%;
+    height:5%;
+    /* margin:10%; */
+    position: absolute;
+    top:50%;
+    margin-left:25%;
+}
+.model_index_card{
+    width: 275px;
+    height: 275px;
+}
+.model_item_page{
+    width: 700px;
+    height: 700px;
 }
 
 /* FORMS */

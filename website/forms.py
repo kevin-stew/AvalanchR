@@ -22,6 +22,6 @@ class ObjectUploadForm(FlaskForm):
     price = StringField('Price', validators = [DataRequired()])
     dimensions = StringField('Dimensions')
     weight = StringField('Weight')
-    img_url = FileField('Preview image', validators = [FileRequired()])  
+    img_url = FileField('Preview image')  
     model_url = FileField('3D model file', validators = [FileRequired()])
     submit_button = SubmitField()
