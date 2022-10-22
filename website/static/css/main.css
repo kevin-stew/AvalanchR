@@ -155,11 +155,12 @@ header {
 model-viewer::part(default-progress-bar){
     background-color: limegreen;
     width:50%;
-    height:5%;
+    height:3px;
     /* margin:10%; */
     position: absolute;
     top:50%;
     margin-left:25%;
+    border:black solid 2px
 }
 .model_index_card{
     width: 275px;
