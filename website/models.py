@@ -48,25 +48,43 @@ class Post(db.Model):
     price = db.Column(db.Numeric(precision=10, scale=2), nullable = False)
     dimensions = db.Column(db.String(50), nullable = True)
     weight = db.Column(db.String(50), nullable = True)
-    img_url = db.Column(db.String, nullable = True )
-    model_url = db.Column(db.String, nullable = True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)  # many drones can ONLY be assigend one user
-    
+    # img_url = db.Column(db.String, nullable = True )
+    date_created = db.Column(db.DateTime, default = datetime.utcnow)
 
-    def __init__(self, title, description, price, dimensions, weight, img_url, model_url, user_id, id=''):
+    model_url = db.Column(db.String, nullable = True)
+    glb = db.Column(db.String, nullable = True)
+    stl = db.Column(db.String, nullable = True)
+    obj = db.Column(db.String, nullable = True)
+    studio_max = db.Column(db.String, nullable = True)
+    dae = db.Column(db.String, nullable = True)
+    skp = db.Column(db.String, nullable = True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)  # many users can ONLY be assigend one user
+
+    def __init__(self, title, description, price, dimensions, weight, \
+                model_url, glb, stl, obj, studio_max, dae, skp, \
+                user_id, id=''):
+
         self.id = None
         self.title = title
         self.description = description
         self.price = price
         self.dimensions = dimensions
         self.weight = weight
-        self.img_url = img_url
+        # self.img_url = img_url
+        
         self.model_url = model_url
+        self.glb = glb
+        self.stl = stl
+        self.obj = obj
+        self.studio_max = studio_max
+        self.dae = dae
+        self.skp = skp
+
         self.user_id = user_id
 
     def __repr__(self):
-        return f"{self.img_url}"
-
+        return f"{self.model_url}"
 
 # Creation of API Schema via the Marshmallow Object
 class PostSchema(ma.Schema):
@@ -77,8 +95,35 @@ class PostSchema(ma.Schema):
                   'price', 
                   'dimensions', 
                   'weight', 
-                  'img_url', 
+                  'date_created', 
                   'model_url']
 
 post_schema = PostSchema()
 posts_schema = PostSchema(many=True)
+
+
+
+# ---------SEPERATE TABLE JUST FOR 3D FILES--------------
+# class File_3D(db.Model, UserMixin):
+#     id = db.Column(db.Integer, primary_key = True)
+#     glb = db.Column(db.String, nullable = True)
+#     stl = db.Column(db.String, nullable = True)
+#     obj = db.Column(db.String, nullable = True)
+#     studio_max = db.Column(db.String, nullable = True)
+#     dae = db.Column(db.String, nullable = True)
+#     skp = db.Column(db.String, nullable = True)
+#     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable = False)  # many model files can ONLY be assigend one post
+    
+#     def __init__(self, glb, stl, obj, studio_max, dae, skp, post_id, id=''):
+#         self.id = None
+#         self.glb = glb
+#         self.stl = stl
+#         self.obj = obj
+#         self.studio_max = studio_max
+#         self.dae = dae
+#         self.skp = skp
+#         self.post_id = post_id
+
+#     def __repr__(self):
+#         return f"mode table #{self.id} is now made"
+# ---------SEPERATE TABLE JUST FOR 3D FILES--------------

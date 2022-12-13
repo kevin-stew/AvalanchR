@@ -1,15 +1,19 @@
 /*Nav Styles */
 /* *{border:red solid 1px;} */
 
+@font-face {
+    font-family: BlackCaps;
+    src: url(../fonts/BLACKCAPS-Regular.ttf);
+}
+
 body, html{
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     height: 100%;
     /* background-color: grey; */
 }
-
-a{
+/* a{
     text-decoration: none;
-}
+} */
 .btn{
     margin-top: 7px
 }
@@ -39,6 +43,7 @@ a{
 
 .loggedinuser{
     font-size: x-small; 
+    color: white;
 }
 
 /* NAV BAR START */
@@ -53,13 +58,14 @@ a{
     margin-left: 10px;
 }
 .navbar-brand{
-    font-family: 'Black Caps';
+    font-family:'BlackCaps';
     font-weight: bold;
     margin-bottom: -1em;
+    font-size: x-large;
 }
-ul#horizontal-list{
+/* ul#horizontal-list{
     display: flex;
-    justify-content: space-evenly;
+    justify-content:space-evenly;
     min-width: 700px;
     padding-top: 20px;
     
@@ -69,17 +75,28 @@ ul#horizontal-list li, ul#horizontal-list a{
     text-decoration:none;
     padding: 0.5vw;
     color: white;
-}
+} */
+
 /* below are actually used, above not sure */
 .navbar{
-    border-bottom: 1px grey solid;
+    border-bottom: 1px grey dotted;
+    min-height: 60px;
 }
 .nav-link{
     color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+    box-shadow: 2px 2px white;
+    margin-right: 10px;
+    /* padding-bottom:-3px; */
+    max-height: 30px;
+    display: flex;
+    align-items: center;
 }
 .nav-link:hover{
-    transform: scale(1.01);
-    color: limegreen;
+    color: black;
+    background-color: white;
+    box-shadow: none;
 }
 
 /* INDEX PAGE START */
@@ -96,35 +113,45 @@ header {
 }
 
 /* CARD FORMATING -- START */
-.card-group-user{
+/* .card-group-user{
     display: flex;
     flex-wrap: wrap; 
     margin: 20px;
     justify-content: center;
-}
+} */
 .card-group{
     display: flex;
     flex-wrap: wrap; 
     /* margin: 20px; */
 }
 .card{
-    border: black 1px solid;
-
-    border-radius: 5px;
+    border: none;
+    border-radius: 0px;
     max-width: 17rem;
     min-width: 17rem;
-    margin: 10px;
+    margin: 1em;
 }
-.card:hover{
+/* .card:hover{
     box-shadow: 0px 0px 20px lightgrey;
-}
+} */
 .card-img-top{
     height: 16rem;
     width: auto
 }
 .card-text{
     font-size: small;
-    font-style: italic;
+    /* background-color: rgb(86, 84, 84);
+    color:white; */
+    padding-left:5px;
+    padding-right: 5px;
+    margin-bottom: -1px;
+}
+
+
+
+/* PROFILE TABLE */
+.table-description{
+    font-size: x-small;
 }
 .list-group-item{
     font-size: small;
@@ -133,25 +160,13 @@ header {
     display: flex;
     justify-content: space-between;
 }
-#update{
-    color: #5f5f5f;
-}
-#delete{
-    color:rgb(192, 74, 74)
-}
-#buy{
-    color: #4b7556;
-}
-#download{
-    color: #545897;
-}
+
 #construction{
     display: flex;
     justify-content: center;
 }
 
 /* INDIVIDUAL ITEM PAGE */
-
 model-viewer::part(default-progress-bar){
     background-color: limegreen;
     width:50%;
@@ -162,13 +177,29 @@ model-viewer::part(default-progress-bar){
     margin-left:25%;
     border:black solid 2px
 }
+.bottom-line{
+    border-bottom:1px lightgrey dotted;
+    padding-bottom: 10px;
+}
+.top-line{
+    border-top:1px lightgrey dotted;
+    padding-top: 5px;
+}
 .model_index_card{
     width: 275px;
     height: 275px;
 }
-.model_item_page{
-    width: 700px;
-    height: 700px;
+.model_item_viewport{
+    min-width: 450px;
+    min-height: 450px;
+    /* max-width: 700px;
+    max-height: 700px; */
+    margin-right: 2em;
+    border-right: lightgrey 1px dotted;
+}
+.item-layout{
+    display: flex;
+    flex-direction: column;
 }
 
 /* FORMS */

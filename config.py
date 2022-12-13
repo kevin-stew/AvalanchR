@@ -21,10 +21,10 @@ class Config():
 
     UPLOAD_FOLDER=os.environ.get('UPLOAD_FOLDER')
     
-    ALLOWED_IMAGES=os.environ.get('ALLOWED_IMAGES')
+    # ALLOWED_IMAGES=os.environ.get('ALLOWED_IMAGES')
     ALLOWED_MODELS=os.environ.get('ALLOWED_MODELS')
 
-    MAX_IMAGE_FILESIZE = 1 * 1024 * 1024
+    # MAX_IMAGE_FILESIZE = 1 * 1024 * 1024
     MAX_3DMODEL_FILESIZE = 5 * 1024 * 1024
 
     AWS_REGION=os.environ.get('AWS_REGION')

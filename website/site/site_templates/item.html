@@ -2,19 +2,73 @@
 
 {% block content %}
 
-<div>
-    <model-viewer src="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" 
-                    shadow-intensity="1" 
-                    camera-controls 
-                    touch-action="pan-y"
-                    camera-orbit="45deg 55deg 100%"
-                    class="model_item_page"
-                    poster="{{ Config.AWS_PUBLIC_URL + '/' + post.img_url }}"
-                    >
-    </model-viewer>
-    {% if post.model_url[-3:] != 'glb' %}
-    <p>Sorry no 3D preview possible with this file</p>
-    {% endif %}
+<div class="container d-flex flew-row justify-content-center align-items-center p-5 m-5">
+
+    <div class="">
+        <!-- auto-rotate
+        auto-rotate-delay="1500" -->
+        <model-viewer src="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" 
+                        shadow-intensity="1" 
+                        camera-controls 
+                        touch-action="pan-y"
+                        camera-orbit="45deg 55deg 100%"
+                        class="model_item_viewport"
+                        >
+        </model-viewer>
+    </div>
+
+    <div class="d-flex flex-column flex-wrap">
+        <h1 class="bottom-line">{{post.title}}</h1>
+        <p class="bottom-line"><small><i>{{post.description}}</i></small></p>
+        <div class="d-flex flex-row justify-content-between">
+            <p><small>Price: ${{post.price}}</small></p>
+            <p><small>Dims: {{post.dimensions}}</small></p>
+            <p><small>Weight: {{post.weight}} lbs</small></p>
+        </div>
+        <!-- <p class="bottome-line"><small>Price: ${{post.price}}</small></p>
+        <p class="bottome-line"><small>Dimensions: {{post.dimensions}}</small></p>
+        <p class="bottome-line"><small>Weight: {{post.weight}} lbs</small></p> -->
+        <div class="top-line bottom-line">Downloads<br>
+
+            {% if post.glb %}
+            <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.glb }}" class="btn btn-secondary" >.glb</a>
+            {% else %}
+            <a href="#" class="btn btn-outline-secondary" >.glb</a>
+            {% endif %}
+
+            {% if post.studio_max %}
+            <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.studio_max }}" class="btn btn-secondary" >.3ds</a>
+            {% else %}
+            <a href="{{ url_for('auth.generate_file_type', id=post.id, name='3ds') }}" class="btn btn-outline-secondary" >.3ds</a>
+            {% endif %}
+           
+            {% if post.obj %}
+            <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.obj }}" class="btn btn-secondary">.obj</a>
+            {% else %}
+            <a href="{{ url_for('auth.generate_file_type', id=post.id, name='obj') }}" class="btn btn-outline-secondary" >.obj</a>
+            {% endif %}
+            
+            {% if post.stl %}
+            <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.stl }}" class="btn btn-secondary" >.stl</a>
+            {% else %}
+            <a href="{{ url_for('auth.generate_file_type', id=post.id, name='stl') }}" class="btn btn-outline-secondary" >.stl</a>
+            {% endif %}
+
+            {% if post.dae %}
+            <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.dae }}" class="btn btn-secondary" >.dae</a>
+            {% else %}
+            <a href="{{ url_for('auth.generate_file_type', id=post.id, name='dae') }}" class="btn btn-outline-secondary" >.dae</a>
+            {% endif %}
+
+        </div>
+        
+        {% if current_user.is_authenticated and current_user.id == post.user_id%}
+        <a href="{{ url_for('auth.update_post', id=post.id) }}" class="btn btn-outline-primary">Update</a>
+        <a href="{{ url_for('auth.delete_post', id=post.id) }}" class="btn btn-outline-danger">Delete</a>
+        {% else %}
+        <a href="{{ url_for('site.purchase', id=post.id) }}" class="btn btn-outline-success">Buy</a> 
+        {% endif %}
+    </div>
 </div>
 
 

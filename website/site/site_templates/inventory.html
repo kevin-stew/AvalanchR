@@ -1,53 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2 style="text-align: center; margin-top: 2rem;">Available Inventory</h2>
 
+<h2 class="d-flex display-2 text-center m-4"><u>Available Inventory</u></h2>
 
 <div class="d-flex flex-wrap">
 {% for post in posts %}
 
-    <div class="card">
-
-        <!-- preview image logic: if glb file show rotating model, otherwise uploaded image in s3-->
-        {% if post.model_url[-3:] == 'glb' %}
-        <div>
-        <model-viewer src="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" 
-                shadow-intensity="1" 
-                auto-rotate
-                camera-orbit="45deg 55deg 100%"
-                auto-rotate-delay="2500"
-                rotation-per-second=".3rad"
-                poster="{{ Config.AWS_PUBLIC_URL + '/' + post.img_url }}"
-                class="model_index_card"
-                >
-            </div>
-        {% else %}
-        <img class="card-img-top" src="{{ Config.AWS_PUBLIC_URL + '/' + post.img_url }}">
-        {% endif %}
-
-        <div class="card-body">
-            <h5 class="card-title">{{ post.title }}</h5>
+    <div class="card d-flex">
+        <h3 class="card-title p-2">{{ post.title }}</h3>
+        <!-- <div class="d-flex justify-content-between">
+            <p class="align-self-end p-2 text-secondary"><small>${{ post.price }}</small></p>
             <p class="card-text">{{ post.description }}</p>
-        </div>
+        </div> -->
 
-        <ul class="list-group list-group-flush">
+        <div>
+            <!-- rotation-per-second=".3rad" -->
+            <!-- auto-rotate
+            auto-rotate-delay="2500" -->
+            <model-viewer src="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" 
+                    shadow-intensity="2" 
+                    camera-orbit="45deg 70deg 100%"
+                    class="model_index_card"
+                    >
+                    <div class="d-flex justify-content-space-evenly flex-column p-2">
+                        <p class="me-auto card-text">Dims: {{ post.dimensions}}</p>
+                        <p class="me-auto card-text">Weight: {{ post.weight}} lbs</p>
+                        <p class="me-auto card-text">${{ post.price }}</p>
+                    </div>
+        </div>
+        <!-- <div class="d-flex justify-content-between">
+            <p class="align-self-end p-2 text-secondary"><small>{{ post.dimensions}}</small></p>
+            <p class="align-self-end p-2 text-secondary"><small>{{ post.weight}} lbs</small></p>
+        </div> -->
+
+        <!-- <ul class="list-group list-group-flush">
+            <li class="list-group-item"><i>{{ post.description }}</i></li>
             <li class="list-group-item"><b>Dimensions:</b> {{ post.dimensions }}</li>
             <li class="list-group-item"><b>Weight:</b> {{ post.weight }}</li>
-            <li class="list-group-item"><b>Price:</b> ${{ post.price }}</li>
-        </ul>
+        </ul> -->
 
-        <div class="card-body card-links">
-            <a href="{{ url_for('site.item', id=post.id)}}" class="card-link">Item Page</a>
-            {% if current_user.is_authenticated and current_user.id == post.user_id%}
-            <a href="{{ url_for('auth.update_post', id=post.id)}}" class="card-link" id="update">Update</a>
-            <a href="{{ url_for('auth.delete_post', id=post.id)}}" class="card-link" id="delete">Delete</a>
-            {% else %}
-            <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" class="card-link" id="download">Download ({{post.model_url[-4:]}})</a>
-            <a href="{{ url_for('site.purchase', id=post.id) }}" class="card-link" id="buy">Buy</a> 
-            {% endif %}
-        </div>
-
+        <a href="{{ url_for('site.item', id=post.id, title=post.title)}}" class="btn btn-outline-dark">View Item Details</a>
     </div>
 
 {% endfor %}
