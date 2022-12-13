@@ -1,4 +1,4 @@
-import os, requests, webbrowser
+import os, webbrowser
 from ast import literal_eval
 # import boto3
 import aspose.threed as a3d
