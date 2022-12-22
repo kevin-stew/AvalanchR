@@ -10,22 +10,33 @@
         <header class="row landing-info">
             <!-- <div class="col-12" id="header-text"></div> -->
                 <h2>A platform to close the gap between <br> "Design Vision" & "Finished Product" </h2>
-                    <div class="" >
-                        <p> &#x2022; Hard-to-describe materials</p>
-                        <p> &#x2022; Exterior Construction Projects</p>
-                        <p> &#x2022; Interior Construction Projects</p>
+                <div class="d-flex justify-content-center">
+                    <div id="animation">
+                        <model-viewer class="animation-model" src="../../static/3D_models/Boulder2.glb" 
+                            camera-orbit="45deg 70deg 100%"
+                            class="model_index_card"
+                            rotation-per-second=".3rad"
+                            auto-rotate
+                            auto-rotate-delay="0">
+                        </model-viewer>
                     </div>
+                    
+                    <div class="d-flex flex-column justify-content-center">
+                        <p> » Hard-to-describe materials  </p>
+                        <br>
+                        <p> » Exterior Construction Projects</p>
+                        <br>
+                        <p> » Interior Construction Projects</p>
+                    </div>
+                </div>
                 
                 <br>
                 <hr>
-                <h5>Test out REAL materials from vendors in your project 3D environment BEFORE you buy.</h5>
-                
-                <div class="col-12" id="middle-text">
-                    <!-- <h2>Check out the Inventory!</h2> -->
-                    <!-- <p>View available items and download 3D models of inventory for purchase to test out in your design</p> -->
-                    <div class="index-btns">
-                        <button class="btn btn-outline-light" onclick="location.href='//www.asla.org/2019awards/629964-Artful_Technology_Methods_For_Communicating_Non_Standard.html'">Why AvalanchR</button>
-                        <button class="btn btn-light" onclick="document.location='/inventory'">View Inventory</button>
+                <div class="middle-info">
+                    <h5>Test out <b>REAL</b> materials from vendors in your project 3D environment <b>BEFORE</b> you buy!</h5>
+                    <div class="d-flex justify-content-around mt-4 mb-4">
+                        <a class="btn btn-outline-light" onclick="document.location='/inventory'">View Inventory</a>
+                        <a class="btn btn-outline-light" onclick="location.href='//www.asla.org/2019awards/629964-Artful_Technology_Methods_For_Communicating_Non_Standard.html'">Why AvalanchR</a>
                     </div>   
                 </div>
                 
@@ -33,10 +44,11 @@
                 <h6>Real Materials | Authorized Sellers | Free 3D models</h6>
         </header> 
 
+
+
         <!--Start Middle Section-->
         <!-- <section class="row">
         </section> -->
-
 
         <!--Footer-->
         <!-- <footer class="row" id="footer">
@@ -47,5 +59,7 @@
 
 <!-- END Hero -->
 </div>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 {% endblock content %}

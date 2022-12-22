@@ -15,14 +15,13 @@
         </div> -->
 
         <div>
-            
+                    <!-- auto-rotate
+                    auto-rotate-delay="2500" -->
             <model-viewer src="{{ Config.AWS_PUBLIC_URL + '/' + post.model_url }}" 
                     shadow-intensity="2" 
                     camera-orbit="45deg 70deg 100%"
                     class="model_index_card"
                     rotation-per-second=".1rad"
-                    auto-rotate
-                    auto-rotate-delay="2500"
                     >
                     <div class="d-flex justify-content-space-evenly flex-column p-2">
                         <p class="me-auto card-text">Dims: {{ post.dimensions}}</p>
