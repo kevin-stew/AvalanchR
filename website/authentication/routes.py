@@ -1,16 +1,17 @@
 import os, webbrowser
-from ast import literal_eval
+
 # import boto3
 import aspose.threed as a3d
-from flask import Blueprint, flash, render_template, request, redirect, \
-                  url_for, send_from_directory, send_file, abort, session
+
+from flask import Blueprint, flash, render_template, request, \
+      redirect, url_for, send_from_directory, send_file, abort, session
+
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.utils import secure_filename
 
 # project file imports
 from website.forms import UserLoginForm, ObjectUploadForm, UserSignupForm
-from website.models import User, Post, db, check_password_hash, \
-                            post_schema, posts_schema
+from website.models import User, Post, db, check_password_hash, post_schema, posts_schema
 from config import Config
 from helpers import s3_client, ProgressPercentage, delete_files_from_s3, \
                     upload_file_to_s3, extension_checker, upload_model
@@ -150,7 +151,6 @@ def upload():
     return render_template('upload.html', form=form)
 
 
-
 #-----------------------UPLOAD_IMAGE-------------------------
 # def upload_image():
 #     # after confirm 'user_file' exist, get the file from input
@@ -193,6 +193,7 @@ def upload():
 #     file.save(os.path.join(Config.UPLOAD_FOLDER, file.filename))
 #     return '../../static/uploads/' + file.filename 
 
+
 @auth.route('/update/<id>', methods = ['GET', 'POST', 'PUT'])
 @login_required
 def update_post(id):
@@ -215,7 +216,6 @@ def update_post(id):
             render_template('update.html', form=form, post_update=post_update)
             # return redirect(url_for('site.inventory'))
             return redirect(url_for('site.item', id=post_update.id))
-
 
         except:
             return render_template('update.html', form=form, post_update=post_update)

@@ -33,31 +33,31 @@
             {% if post.glb %}
             <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.glb }}" class="btn btn-secondary" >.glb</a>
             {% else %}
-            <a href="#" class="btn btn-outline-secondary" >.glb</a>
+            <!-- <a href="#" class="btn btn-outline-secondary" >.glb</a> -->
             {% endif %}
 
             {% if post.studio_max %}
             <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.studio_max }}" class="btn btn-secondary" >.3ds</a>
             {% else %}
-            <a href="{{ url_for('auth.generate_file_type', id=post.id, name='3ds') }}" class="btn btn-outline-secondary" >.3ds</a>
+            <!-- <a href="{{ url_for('auth.generate_file_type', id=post.id, name='3ds') }}" class="btn btn-outline-secondary" >.3ds</a> -->
             {% endif %}
            
             {% if post.obj %}
             <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.obj }}" class="btn btn-secondary">.obj</a>
             {% else %}
-            <a href="{{ url_for('auth.generate_file_type', id=post.id, name='obj') }}" class="btn btn-outline-secondary" >.obj</a>
+            <!-- <a href="{{ url_for('auth.generate_file_type', id=post.id, name='obj') }}" class="btn btn-outline-secondary" >.obj</a> -->
             {% endif %}
             
             {% if post.stl %}
             <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.stl }}" class="btn btn-secondary" >.stl</a>
             {% else %}
-            <a href="{{ url_for('auth.generate_file_type', id=post.id, name='stl') }}" class="btn btn-outline-secondary" >.stl</a>
+            <!-- <a href="{{ url_for('auth.generate_file_type', id=post.id, name='stl') }}" class="btn btn-outline-secondary" >.stl</a> -->
             {% endif %}
 
             {% if post.dae %}
             <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.dae }}" class="btn btn-secondary" >.dae</a>
             {% else %}
-            <a href="{{ url_for('auth.generate_file_type', id=post.id, name='dae') }}" class="btn btn-outline-secondary" >.dae</a>
+            <!-- <a href="{{ url_for('auth.generate_file_type', id=post.id, name='dae') }}" class="btn btn-outline-secondary" >.dae</a> -->
             {% endif %}
 
         </div>

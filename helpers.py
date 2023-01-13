@@ -65,7 +65,6 @@ def upload_file_to_s3(model_file):
 def delete_files_from_s3(post):
     if post:
         # s3_client.delete_object(Bucket=Config.AWS_BUCKET_NAME, Key=post.img_url)
-
         # s3_client.delete_object(Bucket=Config.AWS_BUCKET_NAME, Key=post.glb)
 
         files_to_delete = [post.glb, 

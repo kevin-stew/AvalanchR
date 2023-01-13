@@ -32,11 +32,3 @@ class Config():
     AWS_SECRET_ACCESS_KEY=os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_BUCKET_NAME=os.environ.get('AWS_BUCKET_NAME')
     AWS_PUBLIC_URL=os.environ.get('AWS_PUBLIC_URL')
-
-    #Static Cloud file storage for user uploads : Bucketeer (AWS S3) 
-    # BUCKETEER_AWS_REGION=os.environ.get('BUCKETEER_AWS_REGION')
-    # BUCKETEER_AWS_ACCESS_KEY_ID=os.environ.get('BUCKETEER_AWS_ACCESS_KEY_ID')
-    # BUCKETEER_AWS_SECRET_ACCESS_KEY=os.environ.get('BUCKETEER_AWS_SECRET_ACCESS_KEY')
-    # BUCKETEER_AWS_BUCKET_NAME=os.environ.get('BUCKETEER_BUCKET_NAME')
-    # BUCKETEER_AWS_PUBLIC_URL=os.environ.get('BUCKETEER_PUBLIC_URL')
-    

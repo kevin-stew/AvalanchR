@@ -23,5 +23,5 @@ ma.init_app(app)
 migrate = Migrate(app, root_db)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()
