@@ -64,6 +64,13 @@
             <!-- <a href="{{ url_for('auth.generate_file_type', id=post.id, name='dae') }}" class="btn btn-outline-secondary" >.dae</a> -->
             {% endif %}
 
+            {% if post.dae %}
+            <a href="{{ Config.AWS_PUBLIC_URL + '/' + post.skp }}" class="btn btn-secondary" >.skp</a>
+            {% else %}
+            <a href="#" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="not available">.skp</a>
+            <!-- <a href="{{ url_for('auth.generate_file_type', id=post.id, name='dae') }}" class="btn btn-outline-secondary" >.skp</a> -->
+            {% endif %}
+
         </div>
         
         {% if current_user.is_authenticated and current_user.id == post.user_id%}
