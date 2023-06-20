@@ -1,12 +1,16 @@
 from flask import Flask
 from flask_migrate import Migrate
 from config import Config
+from flask_talisman import Talisman
 
 from .site.routes import site
 from .authentication.routes import auth
 from .models import db as root_db, login_manager, ma
 
 app = Flask(__name__)
+
+# Wrap Flask app with Talisman to redirect all http requests to https
+Talisman(app, content_security_policy=None)
 
 # set TOTAL MAX for all files uploaded at onec (image + 3Dmodel)
 app.config['MAX_CONTENT_LENGTH'] = 6 * 1024 * 1024
